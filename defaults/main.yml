@@ -1,0 +1,24 @@
+---
+litterbox_tools_path: "C:\\Tools\\"
+litterbox_install_dir: "{{ tools_path }}\\LitterBox"
+
+litterbox_repo_url: https://github.com/BlackSnufkin/LitterBox.git
+litterbox_repo_version: main
+
+litterbox_python_version: "3.11"
+litterbox_python_install_dir: C:\Python311
+
+litterbox_manage_config: false
+# Settings, only applied when litterbox_manage_config is true
+# litterbox_host: "127.0.0.1"
+# litterbox_port: 1337
+# litterbox_debug: false
+# litterbox_max_file_size: 104857600
+# litterbox_allowed_extensions:
+#   - exe
+#   - dll
+#   - bin
+#   - docx
+#   - xlsx
+#   - lnk
+#   - sys

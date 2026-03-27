@@ -1,0 +1,7 @@
+---
+- name: Deploy LitterBox configuration
+  ansible.windows.win_template:
+    backup: true
+    src: "{{ role_path }}/templates/config.yaml.j2"
+    dest: "{{ litterbox_config_path }}"
+  when: litterbox_manage_config

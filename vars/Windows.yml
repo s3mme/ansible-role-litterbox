@@ -1,0 +1,8 @@
+---
+litterbox_venv_dir: "{{ litterbox_install_dir }}\\venv"
+litterbox_python_exe: "{{ litterbox_python_install_dir }}\\python.exe"
+litterbox_venv_python: "{{ litterbox_venv_dir }}\\Scripts\\python.exe"
+litterbox_venv_pip: "{{ litterbox_venv_dir }}\\Scripts\\pip.exe"
+litterbox_config_path: "{{ litterbox_install_dir }}\\Config\\config.yaml"
+litterbox_requirements_path: "{{ litterbox_install_dir }}\\requirements.txt"
+litterbox_entry_point: "{{ litterbox_install_dir }}\\litterbox.py"

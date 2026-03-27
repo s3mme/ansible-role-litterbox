@@ -1,0 +1,105 @@
+# {{ ansible_managed }}
+# config/config.yaml
+application:
+  name: "LitterBox"
+  host: "{{ litterbox_host | default('127.0.0.1') }}"
+  port: {{ litterbox_port | default(1337) }}
+  debug: {{ litterbox_debug | default(false) | lower }}
+  version: "4.1.0"
+
+utils:
+  allowed_extensions:
+{% for ext in litterbox_allowed_extensions | default(['exe', 'dll', 'bin', 'docx', 'xlsx', 'lnk', 'sys']) %}
+    - {{ ext }}
+{% endfor %}
+  max_file_size: {{ litterbox_max_file_size | default(104857600) }}
+  upload_folder: "Uploads"
+  result_folder: "Results"
+  malapi_path: "Utils\\malapi.json"
+
+analysis:
+  process:
+    init_wait_time: {{ litterbox_init_wait_time | default(5) }}
+
+  doppelganger:
+    db:
+      path: "Utils\\DoppelgangerDB"
+      blender: "Blender"
+      fuzzyhash: "FuzzyHash"
+      fuzzy_extensions:
+        - exe
+        - dll
+        - bin
+
+  holygrail:
+    enabled: {{ litterbox_scanner_holygrail_enabled | default(true) | lower }}
+    tool_path: ".\\Scanners\\HolyGrail\\HolyGrail.exe"
+    policies_path: ".\\Scanners\\HolyGrail\\Policies\\"
+    command: "{tool_path} -d {file_path} -p {policies_path} -j -o {results_path}"
+    results_path: ".\\Scanners\\HolyGrail\\Analysis\\"
+    timeout: 120
+
+  static:
+    yara:
+      enabled: {{ litterbox_scanner_static_yara_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\Yara\\yara64.exe"
+      command: "{tool_path} -s -m {rules_path} {file_path}"
+      rules_path: ".\\Scanners\\Yara\\LitterBox.yar"
+      timeout: 120
+
+    checkplz:
+      enabled: {{ litterbox_scanner_checkplz_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\CheckPlz\\CheckPlz.exe"
+      command: "{tool_path} -m -r -f {file_path}"
+      timeout: 120
+
+    stringnalyzer:
+      enabled: {{ litterbox_scanner_stringnalyzer_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\Stringnalyzer\\Stringnalyzer.exe "
+      command: "{tool_path} --wide -f {file_path}"
+      timeout: 120
+
+  dynamic:
+    yara:
+      enabled: {{ litterbox_scanner_dynamic_yara_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\Yara\\yara64.exe"
+      command: "{tool_path} -s -m {rules_path} {pid}"
+      rules_path: ".\\Scanners\\Yara\\LitterBox.yar"
+      timeout: 120
+
+    pe_sieve:
+      enabled: {{ litterbox_scanner_pe_sieve_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\PE-Sieve\\pe-sieve.exe"
+      command: "{tool_path} /pid {pid} /threads /data 3 /iat 3 /obfusc 3 /shellc 3 /dir .\\Scanners\\PE-Sieve\\analysis "
+      timeout: 120
+
+    hollows_hunter:
+      enabled: {{ litterbox_scanner_hollows_hunter_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\HollowsHunter\\hollows_hunter.exe"
+      command: "{tool_path} /threads /data 3 /iat 3 /obfusc 3 /hooks /shellc 3 /json /jlvl 2 /quiet /ofilter 2"
+      timeout: 600
+
+    moneta:
+      enabled: {{ litterbox_scanner_moneta_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\Moneta\\Moneta64.exe"
+      command: "{tool_path} -m ioc -p {pid} --option from-base suppress-banner"
+      timeout: 360
+
+    patriot:
+      enabled: {{ litterbox_scanner_patriot_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\Patriot\\Patriot.exe"
+      command: "{tool_path} -p {pid}"
+      timeout: 120
+
+    hsb:
+      enabled: {{ litterbox_scanner_hsb_enabled | default(true) | lower }}
+      tool_path: ".\\Scanners\\HuntSleepingBeacons\\Hunt-Sleeping-Beacons.exe"
+      command: "{tool_path} -p {pid}"
+      timeout: 360
+
+    rededr:
+      enabled: {{ litterbox_scanner_rededr_enabled | default(true) | lower }}
+      etw_wait_time: 15
+      tool_path: ".\\Scanners\\RedEdr\\RedEdr.exe"
+      command: "{tool_path} -e --trace {process_name}"
+      timeout: 120

@@ -1,0 +1,18 @@
+galaxy_info:
+  role_name: litterbox
+  namespace: s3mme
+  author: s3mme
+  description: Installs LitterBox (malware sandbox) on Windows
+  license: MIT
+  min_ansible_version: "2.14"
+  platforms:
+    - name: Windows
+      versions:
+        - all
+  galaxy_tags:
+    - windows
+    - security
+    - malware
+    - sandbox
+
+dependencies: []
