@@ -13,12 +13,12 @@
   ansible.windows.win_package:
     product_id: Git_is1
     state: present
-  register: _git_install
+  register: litterbox_git_install
   failed_when: false
 
 - name: Check if Git is available
   ansible.windows.win_command: git --version
-  register: _git_check
+  register: litterbox_git_check
   changed_when: false
   failed_when: false
 
@@ -26,11 +26,11 @@
   chocolatey.chocolatey.win_chocolatey:
     name: git
     state: present
-  when: _git_check.rc != 0
+  when: litterbox_git_check.rc != 0
 
 - name: Ensure Python {{ litterbox_python_version }} is installed
   ansible.windows.win_command: "{{ litterbox_python_exe }} --version"
-  register: _python_check
+  register: litterbox_python_check
   changed_when: false
   failed_when: false
 
@@ -39,7 +39,7 @@
     name: python3
     version: "{{ litterbox_python_version }}"
     state: present
-  when: _python_check.rc != 0
+  when: litterbox_python_check.rc != 0
 
 - name: Ensure installation directory exists
   ansible.windows.win_file:
@@ -57,8 +57,8 @@
   ansible.windows.win_command: git pull origin {{ litterbox_repo_version }}
   args:
     chdir: "{{ litterbox_install_dir }}"
-  register: _git_pull
-  changed_when: "'Already up to date' not in _git_pull.stdout"
+  register: litterbox_git_pull
+  changed_when: "'Already up to date' not in litterbox_git_pull.stdout"
 
 - name: Create Python virtual environment
   ansible.windows.win_command: >-
@@ -69,8 +69,8 @@
 - name: Install Python dependencies
   ansible.windows.win_command: >-
     {{ litterbox_venv_pip }} install -r "{{ litterbox_requirements_path }}"
-  register: _pip_install
-  changed_when: "'Successfully installed' in _pip_install.stdout"
+  register: litterbox_pip_install
+  changed_when: "'Successfully installed' in litterbox_pip_install.stdout"
 
 - name: Ensure Uploads directory exists
   ansible.windows.win_file:
